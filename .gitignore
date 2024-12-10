@@ -1,0 +1,3 @@
+.venv
+.vite/deps/_metadata.json
+frontend.js
