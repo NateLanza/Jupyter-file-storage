@@ -1,14 +1,19 @@
-function render({ model, el }: any) {
+import { AnyModel } from "./AnyWidgetTypes";
+
+function render({ model, el }: { model: AnyModel, el: Element}) {
   let button = document.createElement("button");
-  button.innerHTML = `count is ${model.get("value")}`;
+  button.innerHTML = "Send";
+  let textField = document.createElement("input");
   button.addEventListener("click", () => {
-    model.set("value", model.get("value") + 1);
+    let newVal = [...(model.get("value") as string[]), textField.value];
+    model.set("value", newVal);
     model.save_changes();
   });
-  model.on("change:value", () => {
-    button.innerHTML = `count is ${model.get("value")}`;
+  model.on("change: value", () => {
+    console.log("Value changed to: ", model.get("value"));
   });
   el.classList.add("counter-widget");
   el.appendChild(button);
+  el.appendChild(textField);
 }
 export default { render };
