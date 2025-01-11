@@ -1,5 +1,4 @@
-function render({ model, el }) {
-  console.log('here');
+function render({ model, el }: any) {
   let button = document.createElement("button");
   button.innerHTML = `count is ${model.get("value")}`;
   button.addEventListener("click", () => {
