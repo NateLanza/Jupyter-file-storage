@@ -13,6 +13,7 @@ function render({ model, el }: { model: AnyModel, el: Element}) {
 
   button.addEventListener("click", () => {
     dataStore.set((id++).toString(), textField.value);
+    dataStore.sync();
   });
   clearButton.addEventListener("click", () => {
     textField.value = dataStore.get(textField.value);
