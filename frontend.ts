@@ -1,28 +1,22 @@
 import { AnyModel } from "./AnyWidgetTypes";
-
-const STORE_NAME = "dsw_data_store";
+import { createDataStore } from "./data_store";
 
 function render({ model, el }: { model: AnyModel, el: Element}) {
   let button = document.createElement("button");
-  button.innerHTML = "Send";
+  button.innerHTML = "Set";
   let clearButton = document.createElement("button");
-  clearButton.innerHTML = "Clear";
+  clearButton.innerHTML = "Get";
   let textField = document.createElement("input");
 
-  console.log('rendered');
+  const dataStore = createDataStore(model);
+  let id = 1;
 
   button.addEventListener("click", () => {
-    let newVal = {...(model.get("value") as Object), ...{test: textField.value}};
-    model.set(STORE_NAME, newVal);
-    model.save_changes();
+    dataStore.set((id++).toString(), textField.value);
   });
   clearButton.addEventListener("click", () => {
-    model.set(STORE_NAME, {});
-    model.save_changes();
+    textField.value = dataStore.get(textField.value);
   })
-  model.on("change: value", () => {
-    console.log("Value changed to: ", model.get(STORE_NAME));
-  });
 
   el.appendChild(button);
   el.appendChild(textField);
