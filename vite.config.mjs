@@ -50,6 +50,9 @@ const baseConfig = {
       }
     }
   },
+  resolve: {
+    extensions: ['.ts', '.js']
+  },  
   define: {
     'process.env.NODE_ENV': '"production"'
   },
@@ -72,7 +75,8 @@ export function configCreator(entry = null, emptyOutDir = true) {
         },
         rollupOptions: {
           output: {
-            manualChunks: undefined
+            manualChunks: undefined,
+            assetFileNames: '[name].[ext]'
           }
         },
         emptyOutDir
