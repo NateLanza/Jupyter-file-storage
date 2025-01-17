@@ -14,12 +14,12 @@ const load = path =>
 const entryPaths = {
   persist_output: {
     srcFileName: "frontend.ts",
-    dir: "./",
+    dir: ".",
     fileName: "frontend.js"
   }
 };
 
-const OUTPUT_DIR = './';
+const OUTPUT_DIR = './lib';
 
 const joinPaths = (...paths) => path.join(...paths);
 

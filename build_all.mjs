@@ -7,7 +7,7 @@ const { configCreator } = c;
 const entryPaths = {
   persist_output: {
     srcFileName: "frontend.ts",
-    dir: "./lib",
+    dir: ".",
     fileName: "frontend.js"
   }
 };
