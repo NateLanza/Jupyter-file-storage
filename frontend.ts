@@ -1,5 +1,5 @@
 import { AnyModel } from "./AnyWidgetTypes";
-import { createDataStore } from "./data_store";
+import { createDataStore } from './data_store';
 
 function render({ model, el }: { model: AnyModel, el: Element}) {
   let button = document.createElement("button");

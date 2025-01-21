@@ -1,6 +1,7 @@
 from typing import Dict
 import anywidget
 import traitlets
+from traitlets import observe
 
 class DataStoreWidget(anywidget.AnyWidget):
   dsw_data_store = traitlets.Dict({}).tag(sync=True)
@@ -10,7 +11,6 @@ class DataStoreWidget(anywidget.AnyWidget):
     if type(self) is DataStoreWidget:
       raise NotImplementedError("Cannot directly instantiate abstract class DataStoreWidget")
 
-    self.observe(self.data_changed, names="dsw_data_store")
-
+  @observe('dsw_data_store')
   def data_changed(self, change: Dict):
     print(change)

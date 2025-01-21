@@ -2,3 +2,4 @@
 .vite/deps/_metadata.json
 *.js
 node_modules
+.DS_Store

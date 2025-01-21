@@ -20,15 +20,17 @@ export type DataStore = {
  * @param model An AnyWidget model. This MUST be created by an AnyWidget that extends the DataStoreWidget python class
  */
 export function createDataStore(model: AnyModel): DataStore {
-  const store = model.get(STORE_KEY);
+  /** The private store. This must be replaced by a new object before syncing to get the traitlet observer to fire */
+  let store = model.get(STORE_KEY);
   if (typeof store !== 'object' || Array.isArray(store) || store === null)
     throw new Error("'model' param does not come from a DataStoreWidget and is missing necessary fields");
 
   return {
-    set: (key, value) => store[key] = value,
+    set: (key, value) => {store[key] = value;},
     get: (key) => store[key],
     sync: () => {
-      model.set(STORE_KEY, store);
+      // We need to make a new object for the oberver to fire
+      model.set(STORE_KEY, {...store});
       model.save_changes();
     }
   }
