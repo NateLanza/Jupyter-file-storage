@@ -3,6 +3,9 @@ import { AnyModel } from "./AnyWidgetTypes";
 /** Name for the data store traitlet */
 const STORE_KEY = 'dsw_data_store';
 
+/** Name for the ID of the widget */
+const WIDGET_ID = 'dsw_id';
+
 /**
  * A datastore which can communicate keys and values with a data store widget
  */
@@ -11,6 +14,8 @@ export type DataStore = {
   set(key: string, value: string): void;
   /** Gets the value of a key in the datastore */
   get(key: string): string;
+  /** Gets this cell's ID */
+  getID(): string;
   /** Synchronizes the key/value pairs with the backend datastore in python */
   sync(): void;
 }
@@ -22,12 +27,14 @@ export type DataStore = {
 export function createDataStore(model: AnyModel): DataStore {
   /** The private store. This must be replaced by a new object before syncing to get the traitlet observer to fire */
   let store = model.get(STORE_KEY);
+  const id = model.get(WIDGET_ID);
   if (typeof store !== 'object' || Array.isArray(store) || store === null)
     throw new Error("'model' param does not come from a DataStoreWidget and is missing necessary fields");
 
   return {
     set: (key, value) => {store[key] = value;},
     get: (key) => store[key],
+    getID: () => id,
     sync: () => {
       // We need to make a new object for the oberver to fire
       model.set(STORE_KEY, {...store});
