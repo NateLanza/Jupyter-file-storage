@@ -13,12 +13,15 @@ def init_data_store(file_name: str):
     raise ValueError("file_name cannot contain '.' or '/' or '\\'")
   
   file_name = file_name + FILE_EXTENSION
+  global dsw_global_data_store
 
   try:
     with open(file_name, 'xb') as file:
       pkl.dump({}, file)
+      dsw_global_data_store = {}
   except FileExistsError:
-    pass
+    with open(file_name, 'rb') as file:
+      dsw_global_data_store = pkl.load(file)
   
   global dsw_file_name
   dsw_file_name = file_name
@@ -35,17 +38,16 @@ class DataStoreWidget(anywidget.AnyWidget):
         
     if 'dsw_file_name' not in globals():
       raise ValueError("DataStoreWidget must be initialized with init_data_store before use")
-
-    global dsw_file_name
-    with open(dsw_file_name, 'rb') as file:
-      if file.readable():
-        self.global_data_store = pkl.load(file)
-        self.dsw_data_store = self.global_data_store.get(self.dsw_id, {})
-      else:
-        raise ValueError("Unable to read from saved jupersist file: ", dsw_file_name)
+    
+    global dsw_global_data_store
+    self.dsw_data_store = dsw_global_data_store.get(self.dsw_id, {})
+    print("DataStoreWidget initialized", dsw_global_data_store)
 
   @observe('dsw_data_store')
-  def data_changed(self, change: Dict):
-    self.global_data_store[self.dsw_id] = self.dsw_data_store
+  def data_changed(self, _):
+    global dsw_global_data_store
+    dsw_global_data_store[self.dsw_id] = self.dsw_data_store
+    print(self.dsw_data_store)
+    print(dsw_global_data_store)
     with open(dsw_file_name, 'wb') as file:
-      pkl.dump(self.global_data_store, file)
+      pkl.dump(dsw_global_data_store, file)
