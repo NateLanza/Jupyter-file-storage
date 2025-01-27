@@ -14,8 +14,11 @@ def init_data_store(file_name: str):
   
   file_name = file_name + FILE_EXTENSION
 
-  with open(file_name, 'wb') as file:
-    pkl.dump({}, file)
+  try:
+    with open(file_name, 'xb') as file:
+      pkl.dump({}, file)
+  except FileExistsError:
+    pass
   
   global dsw_file_name
   dsw_file_name = file_name
@@ -38,10 +41,11 @@ class DataStoreWidget(anywidget.AnyWidget):
       if file.readable():
         self.global_data_store = pkl.load(file)
         self.dsw_data_store = self.global_data_store.get(self.dsw_id, {})
+      else:
+        raise ValueError("Unable to read from saved jupersist file: ", dsw_file_name)
 
   @observe('dsw_data_store')
   def data_changed(self, change: Dict):
-    print(change)
     self.global_data_store[self.dsw_id] = self.dsw_data_store
     with open(dsw_file_name, 'wb') as file:
       pkl.dump(self.global_data_store, file)
