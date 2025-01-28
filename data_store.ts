@@ -31,13 +31,19 @@ export function createDataStore(model: AnyModel): DataStore {
   if (typeof store !== 'object' || Array.isArray(store) || store === null)
     throw new Error("'model' param does not come from a DataStoreWidget and is missing necessary fields");
 
+  // Super hacky fix for the traitlet observer (in python) not firing on *only* the first change
+  model.set(STORE_KEY, {'key': 'value'});
+  model.save_changes();
+  model.set(STORE_KEY, store);
+  model.save_changes();
+
   return {
     set: (key, value) => {store[key] = value;},
     get: (key) => store[key],
     getID: () => id,
     sync: () => {
       // We need to make a new object for the oberver to fire
-      model.set(STORE_KEY, {...store});
+      model.set(STORE_KEY, structuredClone(store));
       model.save_changes();
     }
   }

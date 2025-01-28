@@ -46,6 +46,9 @@ class DataStoreWidget(anywidget.AnyWidget):
     self.observe(self.data_changed, names='dsw_data_store')
 
   def data_changed(self, _):
+    # Ignore the initial value of dsw_data_store, which is set to work around a bug
+    if len(self.dsw_data_store.keys()) == 1 and self.dsw_data_store.get('key') == 'value':
+      return
     global dsw_global_data_store
     dsw_global_data_store[self.dsw_id] = self.dsw_data_store
     with open(dsw_file_name, 'wb') as file:
