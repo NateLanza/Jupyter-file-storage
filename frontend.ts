@@ -6,21 +6,22 @@ function render({ model, el }: { model: AnyModel, el: Element}) {
   button.innerHTML = "Set";
   let clearButton = document.createElement("button");
   clearButton.innerHTML = "Get";
-  let textField = document.createElement("input");
+  let valField = document.createElement("input");
+  let keyField = document.createElement("input");
 
   const dataStore = createDataStore(model);
-  let id = 1;
 
   button.addEventListener("click", () => {
-    dataStore.set((id++).toString(), textField.value);
+    dataStore.set(keyField.value, valField.value);
     dataStore.sync();
   });
   clearButton.addEventListener("click", () => {
-    textField.value = dataStore.get(textField.value);
+    valField.value = dataStore.get(valField.value);
   })
 
   el.appendChild(button);
-  el.appendChild(textField);
+  el.appendChild(keyField);
+  el.appendChild(valField);
   el.appendChild(clearButton);
 }
 export default { render };
