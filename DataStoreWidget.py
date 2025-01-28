@@ -5,6 +5,8 @@ from traitlets import observe
 
 FILE_EXTENSION = ".jupersist"
 
+dsw_global_data_store = {}
+
 def init_data_store(file_name: str):
   if type(file_name) is not str:
     raise ValueError("file_name must be a string")
@@ -41,13 +43,10 @@ class DataStoreWidget(anywidget.AnyWidget):
     
     global dsw_global_data_store
     self.dsw_data_store = dsw_global_data_store.get(self.dsw_id, {})
-    print("DataStoreWidget initialized", dsw_global_data_store)
+    self.observe(self.data_changed, names='dsw_data_store')
 
-  @observe('dsw_data_store')
   def data_changed(self, _):
     global dsw_global_data_store
     dsw_global_data_store[self.dsw_id] = self.dsw_data_store
-    print(self.dsw_data_store)
-    print(dsw_global_data_store)
     with open(dsw_file_name, 'wb') as file:
       pkl.dump(dsw_global_data_store, file)
