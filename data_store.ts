@@ -21,8 +21,11 @@ export type DataStore = {
 }
 
 /**
- * Creates a data store object that can be used to communicate keys and values with a data store widget
- * @param model An AnyWidget model. This MUST be created by an AnyWidget that extends the DataStoreWidget python class
+ * Creates a data store object that can be used to communicate keys and values with a data store widget.
+ * 
+ * Note that, due to a hacky bug workaround, you cannot set key 'key' to 'value' in the store IF there are no other keys;
+ * this will not save to the persistent file in the backend. In other words, {'key': 'value'} is a prohibited DataStore.
+ * @param model An AnyWidget model. This MUST be created by a widget that extends the DataStoreWidget python class
  */
 export function createDataStore(model: AnyModel): DataStore {
   /** The private store. This must be replaced by a new object before syncing to get the traitlet observer to fire */
